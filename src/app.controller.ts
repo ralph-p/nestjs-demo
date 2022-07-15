@@ -17,12 +17,13 @@ import { AllCapsInterceptor } from './interceptors/all-caps.interceptor.ts/all-c
 import { ControllerPipe } from './pipe/controller.pipe.ts/controller.pipe';
 import { HandlerPipe } from './pipe/handler.pipe.ts/handler.pipe';
 import { ValidateEvenPipe } from './pipe/validate-even.pipe.ts/validate-even.pipe';
+import { ValidateFizzBuzz } from './pipe/validate-fizz-buzz.pipe';
 
 @Controller()
 @UseGuards(ControllerGuard)
 @UsePipes(ControllerPipe) // Redundant, but for examples
 export class AppController {
-  constructor(private readonly appService: AppService) { }
+  constructor(private readonly appService: AppService) {}
 
   @Get()
   @UseInterceptors(AllCapsInterceptor)
@@ -46,6 +47,14 @@ export class AppController {
   @UseFilters(OddFilter)
   getEvens(@Query('v', ParseIntPipe, ValidateEvenPipe) value: number) {
     return `Wow, ${value} is a very even number`;
+  }
+
+  @Get('fizzBuzz')
+  @UsePipes(HandlerPipe)
+  getFizzBuzz(
+    @Query('v', ParseIntPipe, ValidateFizzBuzz) value: number | string,
+  ) {
+    return value;
   }
 
   @Get('error')
